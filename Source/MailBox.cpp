@@ -31,6 +31,9 @@ void CMailBox::FlushCalls()
 
 void CMailBox::SendCall(const FunctionType& function, bool waitForCompletion, bool breakpoint)
 {
+	if(m_isResetting)
+		return;
+
 	std::unique_lock<std::mutex> callLock(m_callMutex);
 
 	{
@@ -85,10 +88,17 @@ void CMailBox::ProcessUntilBreakPoint()
 	}
 }
 
-void CMailBox::Reset()
+void CMailBox::Release()
 {
 	m_calls.clear();
 	m_callFinished.notify_all();
+}
+
+void CMailBox::Reset()
+{
+	m_isResetting = true;
+	Release();
+	m_isResetting = false;
 }
 
 bool CMailBox::ReceiveCall()

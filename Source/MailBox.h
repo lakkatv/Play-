@@ -23,6 +23,7 @@ public:
 	void SetCanWait(bool);
 	void ProcessUntilBreakPoint();
 	void Reset();
+	void Release();
 
 private:
 	struct MESSAGE
@@ -48,4 +49,5 @@ private:
 	std::condition_variable m_waitCondition;
 	bool m_callDone;
 	bool m_canWait = true;
+	bool m_isResetting = false;
 };
