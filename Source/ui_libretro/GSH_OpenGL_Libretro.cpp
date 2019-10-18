@@ -76,9 +76,9 @@ void CGSH_OpenGL_Libretro::Reset()
 
 void CGSH_OpenGL_Libretro::Release()
 {
-	m_mailBox.Release();
 	ResetBase();
 	CGSH_OpenGL::ReleaseImpl();
+	m_mailBox.Release();
 }
 
 void CGSH_OpenGL_Libretro::FlipImpl()

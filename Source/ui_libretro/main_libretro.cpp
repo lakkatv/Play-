@@ -523,7 +523,10 @@ void retro_deinit()
 		// we need to clear its queue, to prevent it freezing the reset of the system during delete
 		auto gsHandler = m_virtualMachine->GetGSHandler();
 		if(gsHandler)
+		{
+			gsHandler->ProcessSingleFrame();
 			static_cast<CGSH_OpenGL_Libretro*>(gsHandler)->Release();
+		}
 
 		m_virtualMachine->Pause();
 		m_virtualMachine->DestroyPadHandler();

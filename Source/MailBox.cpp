@@ -89,6 +89,7 @@ void CMailBox::ProcessUntilBreakPoint()
 
 void CMailBox::Release()
 {
+	m_isResetting = true;
 	m_calls.clear();
 	m_callFinished.notify_all();
 }
