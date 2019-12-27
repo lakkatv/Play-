@@ -106,7 +106,8 @@ CGSHandler::CGSHandler()
 CGSHandler::~CGSHandler()
 {
 	m_mailBox.SendCall([this]() { m_threadDone = true; });
-	m_thread.join();
+	if(m_thread.joinable())
+		m_thread.join();
 	delete[] m_pRAM;
 	delete[] m_pCLUT;
 }
@@ -389,7 +390,7 @@ void CGSHandler::Flip(bool showOnly)
 		m_mailBox.FlushCalls();
 		m_mailBox.SendCall(std::bind(&CGSHandler::MarkNewFrame, this));
 	}
-	m_mailBox.SendCall(std::bind(&CGSHandler::FlipImpl, this), true);
+	m_mailBox.SendCall(std::bind(&CGSHandler::FlipImpl, this), true, true);
 }
 
 void CGSHandler::FlipImpl()
@@ -1731,4 +1732,10 @@ void CGSHandler::ThreadProc()
 Framework::CBitmap CGSHandler::GetScreenshot()
 {
 	throw std::runtime_error("Screenshot feature is not implemented in current backend.");
+}
+
+void CGSHandler::ProcessSingleFrame()
+{
+	if(m_mailBox.IsPending())
+		m_mailBox.ProcessUntilBreakPoint();
 }
